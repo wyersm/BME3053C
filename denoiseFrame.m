@@ -1,17 +1,39 @@
 function [xpos, ypos] = denoiseFrame(currentFrame)
 
+for denoiseType = 1:3
+    switch denoiseType
+        
+        case 1 %convolution
+            
+            temp = convolutionFunc(currentFrame);
+            m   = mean(temp(:)); % create a binary mask...
+            % white pixels are above the threshold value of m
+            msk = temp > m;
+            subplot(2, 2, 2), imagesc(msk), title('convolution')
+            
+        case 2 %fft function
+            
+            temp = fftFunc(currentFrame);
+            m   = mean(temp(:)); % create a binary mask...
+            % white pixels are above the threshold value of m
+            msk = temp > 1.1*m;
+            subplot(2, 2, 3), imagesc(msk), title('fft')
+          
+            
+        case 3 %Exp Max
+            temp = expmaxFunc(currentFrame);
+            m   = mean(temp(:));  % create a binary mask...
+            % white pixels are above the threshold value of m
+            msk = temp > 0.9;
+            subplot(2, 2, 4), imagesc(msk), title('exp max')
+    end
+end
+
 %%%%% currentFrame = h (from particleSim);
 %%%%% Update the outputs
 %%%%% Add 3 different denoise algorithms
 
 
-    % estimate a terrible threshold value using the image mean
-    m   = mean(currentFrame(:));
-    
-    % create a binary mask...
-    % white pixels are above the threshold value of m
-    msk = currentFrame > m; 
-    subplot(2, 1, 2), imagesc(msk), title('Mask'), 
     
     % analyze the binary image and extract the area and centroid info
     rp = regionprops(msk,'Area','Centroid'); %regionprops is a function 
@@ -27,9 +49,8 @@ function [xpos, ypos] = denoiseFrame(currentFrame)
     cnt = rp(index).Centroid;
     
     % set the x and y position as outputs
-    xpos = cnt(1);
-    ypos = cnt(2);
-
+    xpos(1, denoiseType) = cnt(1);
+    ypos(1, denoiseType) = cnt(2);
 end
 
 function out = convolutionFunc(in)

@@ -2,6 +2,12 @@ function particle = particleSim(particle)
     % When the function is called, the inputs get mapped to these 5
     % variables above
     
+    
+    %diffx = xpos(:, 2:4) - repmat(xpos(:,1),1,3); %%%%Gives absolute
+    %distance off from original position of moving particle
+    
+    
+    
     %%%%% Make input easier to handle
     windowSize = particle.windowSize;
     standardDev = particle.standardDev;
@@ -50,10 +56,10 @@ function particle = particleSim(particle)
         %%%%%% Update xpos and ypos to contain multiple values
         [xpos, ypos] = denoiseFrame(h);
         
-        particle.dx(t, 2) = xpos; %fills first column with orginal value and second column with new values
-        particle.dy(t, 2) = ypos;
+        particle.dx(t, 2:4) = xpos; %fills first column with orginal value and other columns with new values
+        particle.dy(t, 2:4) = ypos;
         
-        subplot(2, 1, 1)
+        subplot(2, 2, 1)
         imagesc(h) % overwrite the new image to the figure window
         hold on
         plot(xpos, ypos, 'rx', 'MarkerSize', 23, 'LineWidth', 4)
