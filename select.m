@@ -1,5 +1,5 @@
 function [out,pos] = select(in)
-figure, imagesc( log(in+0.001) ), colormap(gray)
+figure, image(in), colormap(gray)
 
 pos=floor(ginput(2));
 
