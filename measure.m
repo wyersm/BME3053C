@@ -1,5 +1,6 @@
 function [objMajax, meanObj, stdObj] = measure(pic)
-
+    clc;
+    
     % inputs should be images in the local directory
     p.picture = imread(pic);
     
@@ -15,9 +16,13 @@ function [objMajax, meanObj, stdObj] = measure(pic)
     %Find major axis of all objects from makeMeasurements function
     pixMajax = p.majax;
     
-    %Delete objects that are for sure not seeds
+    nhist(pixMajax, 10); title('Major Axis/Diameter Distribution')
+    
+    limit = input('Enter minimum value for major axis: '); %A good estimation from histogram
+    
+    %Delete objects that are for sure not seeds/some other object
     for t = length(pixMajax):-1:1
-        if pixMajax(t) < 60 %limit on what major axis measurements will be considered
+        if pixMajax(t) < limit %limit on what major axis measurements will be considered
             pixMajax(t) = [];
         end
     end
@@ -28,7 +33,8 @@ function [objMajax, meanObj, stdObj] = measure(pic)
     meanObj = mean(objMajax(:));
     stdObj = std(objMajax(:));
 
-   
+    fprintf('The major axis mean of the objects is: %4.4f \n', meanObj);
+    fprintf('The major axis standard deviation of the objects is: %4.4f \n', stdObj);
 end
 
 function p = cropPics(p) % pics is now p
