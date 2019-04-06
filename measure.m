@@ -1,4 +1,4 @@
-function [meanObj, stdObj] = measure(pic)
+function [objMajax, meanObj, stdObj] = measure(pic)
 
     % inputs should be images in the local directory
     
@@ -15,9 +15,21 @@ function [meanObj, stdObj] = measure(pic)
     
     %Find major axis of all objects from makeMeasurements function
     pixMajax = p.majax;
-    objMajax = .00256.*pixMajax;
+    
+    %Ecc = p.ecc;
+    
+%     for t = 1:length(p.ecc)
+%         if p.ecc(t) > 0.6
+%             pixMajax = p.majax(t);
+%         end
+%     end
+%             
+
+    %objMajax = .00256.*pixMajax; --> conversion for seeds
+    objMajax = .006800408*pixMajax; %(t); %--> conversion for M&Ms
     meanObj = mean(objMajax(:));
     stdObj = std(objMajax(:));
+
    
 end
 
@@ -39,7 +51,7 @@ function p = createMask(p)
         % we need to do better than this to get good measurements
         a = sum(double(p(t).cropped),3)/3; % greyscale
         m = mean(a(:)); 
-        p(t).msk = a>150; % arbitrary threshold
+        p(t).msk = a>60; % arbitrary threshold
         p(t).wshd = tryWatershed(p(t).msk);
         
     end
@@ -78,37 +90,7 @@ function p = makeMeasurements(p)
         p(t).majax = [stats.MajorAxisLength];
         p(t).minax = [stats.MinorAxisLength];
         
-        p(t).ecc = [stats.Eccentricity];     
+        p(t).ecc = [stats.Eccentricity];
         
     end
-
-end
-
-function drawBounds(p)
-    
-    for t=1:numel(p)
-        
-        fi(p(t).cropped)
-        
-        dangerThreshold = 50;
-        
-        %Requirements to find dangerous nodules
-        index1 = p.areas > dangerThreshold;
-        index2 = p.areas < 350;
-        index3= p.ecc > 0.70; %roundness
-        index4 = p.perim > 35;
-        index = index1 & index2 & index3 & index4;
-        
-        hold on
-        
-        xy = bwboundaries(p.wshd);
-        
-        for tt=1:numel(xy)
-            allPoints = xy{tt};
-            plot( allPoints(:,2), allPoints(:,1), 'b' )
-        end
-        plot( p(t).cnt(index,1), p(t).cnt(index,2), 'rx', 'Markersize', 25,'LineWidth', 2)
-        
-    end
-    
 end
