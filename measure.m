@@ -1,7 +1,6 @@
 function [objMajax, meanObj, stdObj] = measure(pic)
 
     % inputs should be images in the local directory
-    
     p.picture = imread(pic);
     
     % zoom in on objects of interest
@@ -16,13 +15,14 @@ function [objMajax, meanObj, stdObj] = measure(pic)
     %Find major axis of all objects from makeMeasurements function
     pixMajax = p.majax;
     
+    %Delete objects that are for sure not seeds
     for t = length(pixMajax):-1:1
         if pixMajax(t) < 60 %limit on what major axis measurements will be considered
             pixMajax(t) = [];
         end
     end
     
-
+    %%Find MEAN & STD from object array
     %objMajax = .00256.*pixMajax; %--> conversion for seeds
     objMajax = .006800408*pixMajax; %--> conversion for M&Ms
     meanObj = mean(objMajax(:));
