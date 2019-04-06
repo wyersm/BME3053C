@@ -16,17 +16,15 @@ function [objMajax, meanObj, stdObj] = measure(pic)
     %Find major axis of all objects from makeMeasurements function
     pixMajax = p.majax;
     
-    %Ecc = p.ecc;
+    for t = length(pixMajax):-1:1
+        if pixMajax(t) < 60 %limit on what major axis measurements will be considered
+            pixMajax(t) = [];
+        end
+    end
     
-%     for t = 1:length(p.ecc)
-%         if p.ecc(t) > 0.6
-%             pixMajax = p.majax(t);
-%         end
-%     end
-%             
 
-    %objMajax = .00256.*pixMajax; --> conversion for seeds
-    objMajax = .006800408*pixMajax; %(t); %--> conversion for M&Ms
+    %objMajax = .00256.*pixMajax; %--> conversion for seeds
+    objMajax = .006800408*pixMajax; %--> conversion for M&Ms
     meanObj = mean(objMajax(:));
     stdObj = std(objMajax(:));
 
@@ -51,7 +49,7 @@ function p = createMask(p)
         % we need to do better than this to get good measurements
         a = sum(double(p(t).cropped),3)/3; % greyscale
         m = mean(a(:)); 
-        p(t).msk = a>60; % arbitrary threshold
+        p(t).msk = a>50; % arbitrary threshold
         p(t).wshd = tryWatershed(p(t).msk);
         
     end
