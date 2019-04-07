@@ -33,6 +33,8 @@ function [objMajax, meanObj, stdObj] = measure(pic)
     objMajax = .005800408*pixMajax; %--> conversion for M&Ms Take 2
     meanObj = mean(objMajax(:));
     stdObj = std(objMajax(:));
+    
+    nhist(objMajax, 10); title('Major Axis Distribution (Inches) After Limitation')
 
     fprintf('The major axis mean of the objects is: %4.4f inches \n', meanObj);
     fprintf('The major axis standard deviation of the objects is: %4.4f inches \n', stdObj);
@@ -56,7 +58,7 @@ function p = createMask(p)
         % we need to do better than this to get good measurements
         a = sum(double(p(t).cropped),3)/3; % greyscale
         m = mean(a(:)); 
-        p(t).msk = a>50; % arbitrary threshold
+        p(t).msk = a>55; % arbitrary threshold
         p(t).wshd = tryWatershed(p(t).msk);
         
     end
