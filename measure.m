@@ -29,12 +29,13 @@ function [objMajax, meanObj, stdObj] = measure(pic)
     
     %%Find MEAN & STD from object array
     %objMajax = .00256.*pixMajax; %--> conversion for seeds
-    objMajax = .006800408*pixMajax; %--> conversion for M&Ms
+    %objMajax = .006800408*pixMajax; %--> conversion for M&Ms Take 1
+    objMajax = .005800408*pixMajax; %--> conversion for M&Ms Take 2
     meanObj = mean(objMajax(:));
     stdObj = std(objMajax(:));
 
-    fprintf('The major axis mean of the objects is: %4.4f \n', meanObj);
-    fprintf('The major axis standard deviation of the objects is: %4.4f \n', stdObj);
+    fprintf('The major axis mean of the objects is: %4.4f inches \n', meanObj);
+    fprintf('The major axis standard deviation of the objects is: %4.4f inches \n', stdObj);
 end
 
 function p = cropPics(p) % pics is now p
